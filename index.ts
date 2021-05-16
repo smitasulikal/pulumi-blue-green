@@ -32,7 +32,7 @@ const appLabelsV2 = { app: "green" };
 const deploymentV2 = new k8s.apps.v1.Deployment("app-v2", {
 	spec: {
 		selector: { matchLabels: appLabelsV2 },
-		replicas: 3,
+		replicas: 4,
 		template: {
 			metadata: { labels: appLabelsV2 },
 			spec: {
