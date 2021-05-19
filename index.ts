@@ -28,37 +28,10 @@ const deploymentV1 = new k8s.apps.v1.Deployment("app-v1", {
 });
 
 
-// Create a deployment v2.
-const appLabelsV2 = { app: "green" };
-const deploymentV2 = new k8s.apps.v1.Deployment("app-v2", {
-        spec: {
-                selector: { matchLabels: appLabelsV2 },
-                replicas: 4,
-                template: {
-                        metadata: { labels: appLabelsV2 },
-                        spec: {
-                                containers: [{
-                                        name: "app",
-                                        image: "gcr.io/cloud-solutions-images/app:new",
-                    ports: [{containerPort: 8080}],
-                                        livenessProbe: {httpGet: {path: "/version", port: 8080 }},
-                                        readinessProbe: {httpGet: {path: "/version", port: 8080 }},
-                                        lifecycle: {
-                                                preStop: {
-                                                        exec: {command: ["/bin/bash", "-c", "sleep 5"]},
-                                                },
-                                        }
-                                }],
-                        },
-                }
-        }
-});
-
-
 // Create a service load balancer.
 const service = new k8s.core.v1.Service("app", {
     spec: {
-        selector: appLabelsV2,
+        selector: appLabelsV1,
         ports: [{ port: 80, targetPort: 8080 }],
         type: "LoadBalancer",
     },
